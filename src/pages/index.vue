@@ -36,6 +36,13 @@ const tools = [
     description: 'Sync files across devices/cloud',
     icon: IconDownscale,
   },
+  // ---> NEW HARDWARE SECURITY TOOL <---
+  {
+    id: 'security',
+    title: 'Hardware Token Security',
+    description: 'Inspect DSC USB hardware tokens and sign SHA-256 digests natively',
+    icon: IconLayers, // Swap for a custom lock or shield icon if available in your collection
+  },
 ];
 
 const filtered = computed(() =>
