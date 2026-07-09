@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from "vue";
-import { useElementSize } from "@vueuse/core";
-import type { MediaItem } from "../types";
+import { ref, onMounted, watch } from 'vue';
+import { useElementSize } from '@vueuse/core';
+import type { MediaItem } from '../types';
 
 const props = defineProps<{
   mediaItems: MediaItem[];
@@ -49,8 +49,8 @@ watch(
             class="block overflow-hidden rounded transition-all duration-300"
             :class="
               media.slug === activeMediaSlug
-                ? 'ring-1 ring-primary-500 opacity-100 scale-105'
-                : 'opacity-40 hover:opacity-70 hover:scale-105'
+                ? 'ring-1 ring-primary-500 opacity-100'
+                : 'opacity-40 hover:opacity-70'
             "
             @click="emit('update', media.slug)"
           >

@@ -22,7 +22,7 @@ jobs:
       - name: 🛠️ Setup Vite-Plus
         uses: voidzero-dev/setup-vp@v1
         with:
-          node-version: "lts"
+          node-version: 'lts'
           cache: true
 
       - name: 🛠️ Setup Bun

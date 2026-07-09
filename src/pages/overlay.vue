@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { computed, onUnmounted, ref, watch } from "vue";
-import { useIntervalFn } from "@vueuse/core";
-import { open } from "@tauri-apps/plugin-dialog";
-import { convertFileSrc, invoke } from "@tauri-apps/api/core";
-import { listen, type UnlistenFn } from "@tauri-apps/api/event";
-import { useRouter } from "vue-router";
+import { computed, onUnmounted, ref, watch } from 'vue';
+import { useIntervalFn } from '@vueuse/core';
+import { open } from '@tauri-apps/plugin-dialog';
+import { convertFileSrc, invoke } from '@tauri-apps/api/core';
+import { listen, type UnlistenFn } from '@tauri-apps/api/event';
+import { useRouter } from 'vue-router';
 
-import ToolLayout from "../layouts/ToolLayout.vue";
-import OverlaySidePanel from "../components/Overlay/OverlaySidePanel.vue";
-import MediaFlimstrip from "../components/MediaFlimstrip.vue";
-import { isMediaFile } from "../utils";
-import type { MediaItem } from "../types";
+import ToolLayout from '../layouts/ToolLayout.vue';
+import OverlaySidePanel from '../components/Overlay/OverlaySidePanel.vue';
+import MediaFlimstrip from '../components/MediaFlimstrip.vue';
+import { isMediaFile } from '../utils';
+import type { MediaItem } from '../types';
 
 type RustMediaItem = MediaItem & { path: string };
 
@@ -18,7 +18,7 @@ type OverlayProgressEvent = {
   current: number;
   total: number;
   path: string;
-  status: "done" | "error";
+  status: 'done' | 'error';
   error?: string | null;
 };
 
@@ -27,28 +27,28 @@ type BulkOverlayReport = {
   failed: [string, string][];
 };
 
-type ProcessStatus = "idle" | "processing" | "done";
-type Stage = "awaiting-source" | "awaiting-watermark" | "ready" | "processing" | "done";
+type ProcessStatus = 'idle' | 'processing' | 'done';
+type Stage = 'awaiting-source' | 'awaiting-watermark' | 'ready' | 'processing' | 'done';
 
 const router = useRouter();
 
 const mediaItems = ref<RustMediaItem[]>([]);
-const srcDir = ref("");
+const srcDir = ref('');
 const currentIndex = ref(0);
 const currentItem = computed(() => mediaItems.value[currentIndex.value]);
 
-const watermarkPath = ref("");
+const watermarkPath = ref('');
 const watermarkSrc = computed(() =>
-  watermarkPath.value ? convertFileSrc(watermarkPath.value) : "",
+  watermarkPath.value ? convertFileSrc(watermarkPath.value) : '',
 );
-const watermarkName = computed(() => watermarkPath.value.split(/[\\/]/).at(-1) ?? "");
+const watermarkName = computed(() => watermarkPath.value.split(/[\\/]/).at(-1) ?? '');
 const watermarkNaturalSize = ref({ w: 0, h: 0 });
 
 const canvasWidth = ref(1920);
 const canvasHeight = ref(1080);
 
-const hAlign = ref<"left" | "center" | "right">("right");
-const vAlign = ref<"top" | "middle" | "bottom">("bottom");
+const hAlign = ref<'left' | 'center' | 'right'>('right');
+const vAlign = ref<'top' | 'middle' | 'bottom'>('bottom');
 
 const wmScale = ref(20);
 const heightLocked = ref(true);
@@ -70,51 +70,51 @@ const wmHeightPx = computed(() =>
 
 const padding = computed(() => Math.round(Math.min(canvasWidth.value, canvasHeight.value) * 0.02));
 const positionXPx = computed(() => {
-  if (hAlign.value === "left") return padding.value;
-  if (hAlign.value === "center") return Math.round((canvasWidth.value - wmWidthPx.value) / 2);
+  if (hAlign.value === 'left') return padding.value;
+  if (hAlign.value === 'center') return Math.round((canvasWidth.value - wmWidthPx.value) / 2);
   return canvasWidth.value - wmWidthPx.value - padding.value;
 });
 const positionYPx = computed(() => {
-  if (vAlign.value === "top") return padding.value;
-  if (vAlign.value === "middle") return Math.round((canvasHeight.value - wmHeightPx.value) / 2);
+  if (vAlign.value === 'top') return padding.value;
+  if (vAlign.value === 'middle') return Math.round((canvasHeight.value - wmHeightPx.value) / 2);
   return canvasHeight.value - wmHeightPx.value - padding.value;
 });
 
 const mediaAspectRatio = computed(() => {
   const ar = currentItem.value?.metadata?.aspectRatio;
-  if (!ar) return "16/9";
-  const [w, h] = ar.split(":").map(Number);
-  return w && h ? `${w}/${h}` : "16/9";
+  if (!ar) return '16/9';
+  const [w, h] = ar.split(':').map(Number);
+  return w && h ? `${w}/${h}` : '16/9';
 });
 
 const watermarkPreviewStyle = computed(() => {
   const pad = `${wmPadding.value}%`;
   const s: Record<string, string> = {
-    position: "absolute",
+    position: 'absolute',
     width: `${wmScale.value}%`,
     opacity: String(wmOpacity.value),
-    pointerEvents: "none",
+    pointerEvents: 'none',
   };
-  s.left = hAlign.value === "left" ? pad : hAlign.value === "center" ? "50%" : "auto";
-  s.right = hAlign.value === "right" ? pad : "auto";
-  s.top = vAlign.value === "top" ? pad : vAlign.value === "middle" ? "50%" : "auto";
-  s.bottom = vAlign.value === "bottom" ? pad : "auto";
+  s.left = hAlign.value === 'left' ? pad : hAlign.value === 'center' ? '50%' : 'auto';
+  s.right = hAlign.value === 'right' ? pad : 'auto';
+  s.top = vAlign.value === 'top' ? pad : vAlign.value === 'middle' ? '50%' : 'auto';
+  s.bottom = vAlign.value === 'bottom' ? pad : 'auto';
   s.transform =
-    hAlign.value === "center" && vAlign.value === "middle"
-      ? "translate(-50%, -50%)"
-      : hAlign.value === "center"
-        ? "translateX(-50%)"
-        : vAlign.value === "middle"
-          ? "translateY(-50%)"
-          : "none";
+    hAlign.value === 'center' && vAlign.value === 'middle'
+      ? 'translate(-50%, -50%)'
+      : hAlign.value === 'center'
+        ? 'translateX(-50%)'
+        : vAlign.value === 'middle'
+          ? 'translateY(-50%)'
+          : 'none';
   return s;
 });
 
-const processStatus = ref<ProcessStatus>("idle");
+const processStatus = ref<ProcessStatus>('idle');
 const processing = ref({
   total: 0,
   processed: 0,
-  currentFile: "",
+  currentFile: '',
   startedAt: 0,
   errors: [] as string[],
 });
@@ -134,21 +134,21 @@ const pct = computed(() => {
   return total > 0 ? Math.round((processed / total) * 100) : 0;
 });
 const elapsedLabel = computed(() => {
-  if (!processing.value.startedAt) return "0s";
+  if (!processing.value.startedAt) return '0s';
   const s = (now.value - processing.value.startedAt) / 1000;
   return s < 60 ? `${s.toFixed(1)}s` : `${Math.floor(s / 60)}m ${Math.floor(s % 60)}s`;
 });
 
 const stage = computed<Stage>(() => {
-  if (processStatus.value === "processing") return "processing";
-  if (processStatus.value === "done") return "done";
-  if (!mediaItems.value.length) return "awaiting-source";
-  if (!watermarkPath.value) return "awaiting-watermark";
-  return "ready";
+  if (processStatus.value === 'processing') return 'processing';
+  if (processStatus.value === 'done') return 'done';
+  if (!mediaItems.value.length) return 'awaiting-source';
+  if (!watermarkPath.value) return 'awaiting-watermark';
+  return 'ready';
 });
 
 const statusLabel = computed(() => {
-  if (stage.value === "done" && result.value)
+  if (stage.value === 'done' && result.value)
     return `${result.value.total - result.value.errors}/${result.value.total} succeeded · ${formatMs(result.value.elapsedMs)}`;
 });
 
@@ -157,7 +157,7 @@ let completeUnlisten: UnlistenFn | null = null;
 
 async function startListening() {
   await stopListening();
-  progressUnlisten = await listen<OverlayProgressEvent>("overlay-progress", ({ payload }) => {
+  progressUnlisten = await listen<OverlayProgressEvent>('overlay-progress', ({ payload }) => {
     requestAnimationFrame(() => {
       processing.value = {
         ...processing.value,
@@ -165,13 +165,13 @@ async function startListening() {
         processed: payload.current,
         currentFile: payload.path,
         errors:
-          payload.status === "error" && payload.error
+          payload.status === 'error' && payload.error
             ? [...processing.value.errors, `${payload.path}: ${payload.error}`]
             : processing.value.errors,
       };
     });
   });
-  completeUnlisten = await listen<BulkOverlayReport>("overlay-complete", ({ payload }) => {
+  completeUnlisten = await listen<BulkOverlayReport>('overlay-complete', ({ payload }) => {
     result.value = {
       total: payload.succeeded.length + payload.failed.length,
       errors: payload.failed.length,
@@ -198,7 +198,7 @@ watch(
 
 async function loadMedia(path: string) {
   srcDir.value = path;
-  const files = await invoke<RustMediaItem[]>("list_files", { dir: path });
+  const files = await invoke<RustMediaItem[]>('list_files', { dir: path });
   mediaItems.value = files
     .map((f) => ({ ...f, thumbnailUrl: convertFileSrc(f.path) }))
     .filter((f) => isMediaFile(f.path));
@@ -214,7 +214,7 @@ async function browseSrc() {
 async function browseWatermark() {
   const selected = await open({
     multiple: false,
-    filters: [{ name: "Images", extensions: ["png", "jpg", "jpeg", "webp", "svg", "avif"] }],
+    filters: [{ name: 'Images', extensions: ['png', 'jpg', 'jpeg', 'webp', 'svg', 'avif'] }],
   });
   if (!selected) return;
   watermarkPath.value = Array.isArray(selected) ? selected[0]! : selected;
@@ -227,10 +227,10 @@ function onWatermarkLoaded(e: Event) {
 }
 
 async function run() {
-  if (stage.value !== "ready") return;
+  if (stage.value !== 'ready') return;
 
-  processStatus.value = "processing";
-  processing.value = { total: 0, processed: 0, currentFile: "", startedAt: Date.now(), errors: [] };
+  processStatus.value = 'processing';
+  processing.value = { total: 0, processed: 0, currentFile: '', startedAt: Date.now(), errors: [] };
   result.value = null;
   now.value = Date.now();
 
@@ -242,7 +242,7 @@ async function run() {
   const vMap = { top: 0, middle: 0.5, bottom: 1 } as const;
 
   try {
-    const report = await invoke<BulkOverlayReport>("add_overlays", {
+    const report = await invoke<BulkOverlayReport>('add_overlays', {
       mediaPaths: mediaItems.value.map((f) => f.path),
       overlayPath: watermarkPath.value,
       outputDir: `${srcDir.value}_watermarked`,
@@ -268,7 +268,7 @@ async function run() {
   } finally {
     await stopListening();
     pause();
-    processStatus.value = "done";
+    processStatus.value = 'done';
   }
 }
 
@@ -277,12 +277,12 @@ function formatMs(ms: number) {
   return s < 60 ? `${s.toFixed(1)}s` : `${Math.floor(s / 60)}m ${(s % 60).toFixed(0)}s`;
 }
 
-function handleAction(key: "enter" | "escape") {
-  if (key !== "enter") return;
-  if (stage.value === "awaiting-source") browseSrc();
-  else if (stage.value === "awaiting-watermark") browseWatermark();
-  else if (stage.value === "ready") run();
-  else if (stage.value === "done") processStatus.value = "idle";
+function handleAction(key: 'enter' | 'escape') {
+  if (key !== 'enter') return;
+  if (stage.value === 'awaiting-source') browseSrc();
+  else if (stage.value === 'awaiting-watermark') browseWatermark();
+  else if (stage.value === 'ready') run();
+  else if (stage.value === 'done') processStatus.value = 'idle';
 }
 
 onUnmounted(() => {
@@ -314,7 +314,7 @@ onUnmounted(() => {
             <video
               v-if="currentItem.type === 'video'"
               :src="currentItem.thumbnailUrl"
-              class="w-full h-full object-contain select-none"
+              class="size-full object-contain select-none"
               controls
               autoplay
               loop
@@ -325,7 +325,7 @@ onUnmounted(() => {
               v-else
               :src="currentItem.thumbnailUrl"
               :alt="currentItem.title"
-              class="w-full h-full object-contain select-none"
+              class="size-full object-contain select-none"
               draggable="false"
             />
             <img
@@ -498,7 +498,7 @@ onUnmounted(() => {
           </button>
           <button
             v-else-if="stage === 'ready'"
-            class="px-3 py-1 rounded bg-primary-500 hover:bg-primary-400 text-white text-xs font-semibold tracking-wider transition-colors flex items-center gap-1.5"
+            class="px-3 py-1 rounded bg-primary-500 hover:bg-primary-400 text-white text-xs font-semi-bold tracking-wider transition-colors flex items-center gap-1.5"
             @click="run"
           >
             <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">

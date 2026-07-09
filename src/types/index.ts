@@ -1,4 +1,4 @@
-export type MediaType = "photo" | "video";
+export type MediaType = 'photo' | 'video';
 
 export type MediaMetadata = {
   size: number;

@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import NumericInput from "../NumericInput.vue";
+import { computed } from 'vue';
+import NumericInput from '../NumericInput.vue';
 
-const hAlign = defineModel<"left" | "center" | "right">("hAlign", { required: true });
-const vAlign = defineModel<"top" | "middle" | "bottom">("vAlign", { required: true });
-const wmScale = defineModel<number>("wmScale", { required: true });
-const wmOpacity = defineModel<number>("wmOpacity", { required: true });
-const heightLocked = defineModel<boolean>("heightLocked", { required: true });
-const wmManualHeight = defineModel<number>("wmManualHeight", { required: true });
+const hAlign = defineModel<'left' | 'center' | 'right'>('hAlign', { required: true });
+const vAlign = defineModel<'top' | 'middle' | 'bottom'>('vAlign', { required: true });
+const wmScale = defineModel<number>('wmScale', { required: true });
+const wmOpacity = defineModel<number>('wmOpacity', { required: true });
+const heightLocked = defineModel<boolean>('heightLocked', { required: true });
+const wmManualHeight = defineModel<number>('wmManualHeight', { required: true });
 
 const props = defineProps<{
   watermarkName: string;
@@ -20,7 +20,7 @@ const props = defineProps<{
   canvasWidth: number;
 }>();
 
-const emit = defineEmits<{ "browse-watermark": [] }>();
+const emit = defineEmits<{ 'browse-watermark': [] }>();
 
 const opacityPercent = computed({
   get: () => Math.round(wmOpacity.value * 100),
@@ -38,16 +38,16 @@ function toggleLock() {
   heightLocked.value = !heightLocked.value;
 }
 
-const H_ALIGNS: { value: "left" | "center" | "right"; rect: [number, number, number, number] }[] = [
-  { value: "left", rect: [2, 5, 5, 6] },
-  { value: "center", rect: [5.5, 5, 5, 6] },
-  { value: "right", rect: [9, 5, 5, 6] },
+const H_ALIGNS: { value: 'left' | 'center' | 'right'; rect: [number, number, number, number] }[] = [
+  { value: 'left', rect: [2, 5, 5, 6] },
+  { value: 'center', rect: [5.5, 5, 5, 6] },
+  { value: 'right', rect: [9, 5, 5, 6] },
 ];
 
-const V_ALIGNS: { value: "top" | "middle" | "bottom"; rect: [number, number, number, number] }[] = [
-  { value: "top", rect: [5, 2, 6, 5] },
-  { value: "middle", rect: [5, 5.5, 6, 5] },
-  { value: "bottom", rect: [5, 9, 6, 5] },
+const V_ALIGNS: { value: 'top' | 'middle' | 'bottom'; rect: [number, number, number, number] }[] = [
+  { value: 'top', rect: [5, 2, 6, 5] },
+  { value: 'middle', rect: [5, 5.5, 6, 5] },
+  { value: 'bottom', rect: [5, 9, 6, 5] },
 ];
 </script>
 
@@ -62,7 +62,7 @@ const V_ALIGNS: { value: "top" | "middle" | "bottom"; rect: [number, number, num
           <div
             class="w-10 h-10 bg-black/50 border border-white/10 flex items-center justify-center shrink-0 rounded overflow-hidden"
           >
-            <img v-if="watermarkSrc" :src="watermarkSrc" class="w-full h-full object-contain" />
+            <img v-if="watermarkSrc" :src="watermarkSrc" class="size-full object-contain" />
             <svg
               v-else
               width="20"
@@ -81,7 +81,7 @@ const V_ALIGNS: { value: "top" | "middle" | "bottom"; rect: [number, number, num
             </svg>
           </div>
           <div class="min-w-0">
-            <p class="text-xs text-white/70 truncate">{{ watermarkName || "Select watermark" }}</p>
+            <p class="text-xs text-white/70 truncate">{{ watermarkName || 'Select watermark' }}</p>
             <p
               v-if="watermarkNaturalSize.w && watermarkNaturalSize.h"
               class="text-2xs text-white/30 mt-0.5"
@@ -93,7 +93,7 @@ const V_ALIGNS: { value: "top" | "middle" | "bottom"; rect: [number, number, num
       </section>
 
       <section>
-        <h3 class="text-2xs font-semibold text-white/30 tracking-widest uppercase mb-2">
+        <h3 class="text-2xs font-semi-bold text-white/30 tracking-widest uppercase mb-2">
           Position
         </h3>
         <div class="flex items-center gap-2 mb-3">
@@ -173,7 +173,7 @@ const V_ALIGNS: { value: "top" | "middle" | "bottom"; rect: [number, number, num
       </section>
 
       <section>
-        <h3 class="text-2xs font-semibold text-white/30 tracking-widest uppercase mb-2">
+        <h3 class="text-2xs font-semi-bold text-white/30 tracking-widest uppercase mb-2">
           Transform
         </h3>
         <div class="flex flex-col gap-2">

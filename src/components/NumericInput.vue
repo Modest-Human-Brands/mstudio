@@ -9,7 +9,7 @@ defineProps<{
   readonly?: boolean;
 }>();
 
-defineEmits<{ "update:modelValue": [number] }>();
+defineEmits<{ 'update:modelValue': [number] }>();
 </script>
 
 <template>

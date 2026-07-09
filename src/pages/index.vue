@@ -1,39 +1,39 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
-import { useRouter } from "vue-router";
-import ToolLayout from "../layouts/ToolLayout.vue";
+import { ref, computed } from 'vue';
+import { useRouter } from 'vue-router';
+import ToolLayout from '../layouts/ToolLayout.vue';
 
-import IconFolder from "~icons/app/folder";
-import IconLayers from "~icons/app/layers";
-import IconDownscale from "~icons/app/downscale";
-import IconBroadcast from "~icons/app/downscale";
+import IconFolder from '~icons/app/folder';
+import IconLayers from '~icons/app/layers';
+import IconDownscale from '~icons/app/downscale';
+import IconBroadcast from '~icons/app/downscale';
 
 const router = useRouter();
-const query = ref("");
+const query = ref('');
 
 const tools = [
   {
-    id: "stream",
-    title: "Stream media",
-    description: "Preview USB video stream and broadcast to a remote via SRT",
+    id: 'stream',
+    title: 'Stream media',
+    description: 'Preview USB video stream and broadcast to a remote via SRT',
     icon: IconBroadcast,
   },
   {
-    id: "reorganize",
-    title: "Reorganize Files",
-    description: "Organize files based on spec.json",
+    id: 'reorganize',
+    title: 'Reorganize Files',
+    description: 'Organize files based on spec.json',
     icon: IconFolder,
   },
   {
-    id: "overlay",
-    title: "Add Overlay / Watermark",
-    description: "Apply watermark overlay to selected assets",
+    id: 'overlay',
+    title: 'Add Overlay / Watermark',
+    description: 'Apply watermark overlay to selected assets',
     icon: IconLayers,
   },
   {
-    id: "sync",
-    title: "Sync media",
-    description: "Sync files across devices/cloud",
+    id: 'sync',
+    title: 'Sync media',
+    description: 'Sync files across devices/cloud',
     icon: IconDownscale,
   },
 ];

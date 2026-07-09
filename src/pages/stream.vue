@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { ref, watchEffect, onMounted, onUnmounted } from "vue";
-import { useUserMedia } from "@vueuse/core";
-import ToolLayout from "../layouts/ToolLayout.vue";
+import { ref, watchEffect, onMounted, onUnmounted } from 'vue';
+import { useUserMedia } from '@vueuse/core';
+import ToolLayout from '../layouts/ToolLayout.vue';
 
 const videoElement = ref(null);
 
 const { stream, start, stop } = useUserMedia({
   constraints: {
     video: {
-      facingMode: "environment",
+      facingMode: 'environment',
       width: { ideal: 1920 },
       height: { ideal: 1080 },
     },
@@ -43,7 +43,7 @@ onUnmounted(() => {
     >
       <video
         ref="videoElement"
-        class="w-full h-full object-cover"
+        class="size-full object-cover"
         autoplay
         playsinline
         muted
