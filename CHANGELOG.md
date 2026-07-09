@@ -1,5 +1,26 @@
 # Changelog
 
+## v0.4.0
+
+[compare changes](https://github.com/Modest-Human-Brands/msync/compare/v0.3.0...v0.4.0)
+
+### 🚀 Enhancements
+
+- Update README, enhance component definitions, and upgrade dependencies ([0099dee](https://github.com/Modest-Human-Brands/msync/commit/0099dee))
+- ⚠️  Add hardware token security features ([baf31af](https://github.com/Modest-Human-Brands/msync/commit/baf31af))
+
+### 🏡 Chore
+
+- Update dependencies and improve code formatting ([7b42b2e](https://github.com/Modest-Human-Brands/msync/commit/7b42b2e))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Add hardware token security features ([baf31af](https://github.com/Modest-Human-Brands/msync/commit/baf31af))
+
+### ❤️ Contributors
+
+- Shirsendu Bairagi ([@shba007](https://github.com/shba007))
+
 ## v0.3.0
 
 [compare changes](https://github.com/Modest-Human-Brands/msync/compare/v0.1.0...v0.3.0)
