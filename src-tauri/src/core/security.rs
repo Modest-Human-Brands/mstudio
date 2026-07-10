@@ -29,6 +29,18 @@ pub struct CertItem {
     pub certificate_chain_der_hex: Vec<String>,
 }
 
+#[derive(Serialize)]
+pub struct CertListResponse {
+    pub total_count: usize,
+    pub certificates: Vec<CertItem>,
+}
+
+#[derive(Serialize)]
+pub struct SignHashResponse {
+    #[serde(rename = "signatureHex")]
+    pub signature_hex: String,
+}
+
 #[cfg(target_os = "windows")]
 struct CryptoHandleGuard {
     handle: HCRYPTPROV_OR_NCRYPT_KEY_HANDLE,
@@ -99,7 +111,7 @@ unsafe fn get_cert_name_issuer(cert: &CERT_CONTEXT, name_type: CERT_STRING_TYPE)
 }
 
 #[tauri::command]
-pub async fn list_certificates() -> Result<Vec<CertItem>, String> {
+pub async fn list_certificates() -> Result<CertListResponse, String> {
     #[cfg(not(target_os = "windows"))]
     {
         return Err("Hardware certificate signing is only supported on Windows OS.".to_string());
@@ -179,12 +191,15 @@ pub async fn list_certificates() -> Result<Vec<CertItem>, String> {
             }
             let _ = CertCloseStore(store_handle, 0);
         }
-        Ok(cert_list)
+        Ok(CertListResponse {
+            total_count: cert_list.len(),
+            certificates: cert_list,
+        })
     }
 }
 
 #[tauri::command]
-pub async fn sign_hash(digest_hex: String, cert_index: usize) -> Result<String, String> {
+pub async fn sign_hash(digest_hex: String, cert_index: usize) -> Result<SignHashResponse, String> {
     #[cfg(not(target_os = "windows"))]
     {
         return Err("Hardware certificate signing is only supported on Windows OS.".to_string());
@@ -324,7 +339,9 @@ pub async fn sign_hash(digest_hex: String, cert_index: usize) -> Result<String, 
                 sig_buffer
             };
 
-            Ok(hex::encode(signature_bytes))
+            Ok(SignHashResponse {
+                signature_hex: hex::encode(signature_bytes),
+            })
         }
     }
 }

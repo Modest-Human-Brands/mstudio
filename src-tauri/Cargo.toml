@@ -31,7 +31,7 @@ rusb = "0.9.4"
 thiserror = "2.0.18"
 hex = "0.4"
 axum = "0.7"
-tower-http = { version = "0.5", features = ["cors"] }
+tower-http = { version = "0.5", features = ["cors", "set-header"] }
 hostname = "0.4"
 
 # Add Microsoft Windows API bindings for Hardware Token access

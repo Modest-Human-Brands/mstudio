@@ -7,7 +7,7 @@
 ### 🚀 Enhancements
 
 - Update README, enhance component definitions, and upgrade dependencies ([0099dee](https://github.com/Modest-Human-Brands/msync/commit/0099dee))
-- ⚠️  Add hardware token security features ([baf31af](https://github.com/Modest-Human-Brands/msync/commit/baf31af))
+- ⚠️ Add hardware token security features ([baf31af](https://github.com/Modest-Human-Brands/msync/commit/baf31af))
 
 ### 🏡 Chore
 
@@ -15,7 +15,7 @@
 
 #### ⚠️ Breaking Changes
 
-- ⚠️  Add hardware token security features ([baf31af](https://github.com/Modest-Human-Brands/msync/commit/baf31af))
+- ⚠️ Add hardware token security features ([baf31af](https://github.com/Modest-Human-Brands/msync/commit/baf31af))
 
 ### ❤️ Contributors
 

@@ -19,12 +19,14 @@ async function fetchCertificates() {
   isLoading.value = true;
   statusMessage.value = 'Accessing hardware tokens...';
   try {
-    const res = await invoke<CertItem[]>('list_certificates');
-    certificates.value = res;
-    if (res.length > 0 && selectedCertIndex.value === null) {
-      selectedCertIndex.value = res[0]!.index;
+    const res = await invoke<{ total_count: number; certificates: CertItem[] }>(
+      'list_certificates',
+    );
+    certificates.value = res.certificates;
+    if (res.total_count > 0 && selectedCertIndex.value === null) {
+      selectedCertIndex.value = certificates.value[0]!.index;
     }
-    statusMessage.value = `Found ${res.length} active certificate(s).`;
+    statusMessage.value = `Found ${res.total_count} active certificate(s).`;
   } catch (err) {
     statusMessage.value = `Error: ${String(err)}`;
   } finally {
