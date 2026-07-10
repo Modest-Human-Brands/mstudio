@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.4.1
+
+[compare changes](https://github.com/Modest-Human-Brands/msync/compare/v0.4.0...v0.4.1)
+
+### 🩹 Fixes
+
+- Enhance security features with new response structures and CORS settings ([0090c78](https://github.com/Modest-Human-Brands/msync/commit/0090c78))
+
+### ❤️ Contributors
+
+- Shirsendu Bairagi ([@shba007](https://github.com/shba007))
+
 ## v0.4.0
 
 [compare changes](https://github.com/Modest-Human-Brands/msync/compare/v0.3.0...v0.4.0)
