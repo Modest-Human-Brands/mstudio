@@ -3,10 +3,11 @@ import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import ToolLayout from '../layouts/ToolLayout.vue';
 
-import IconFolder from '~icons/app/folder';
+import IconBroadcast from '~icons/app/broadcast';
+// import IconDownscale from '~icons/app/downscale';
+// import IconFolder from '~icons/app/folder';
 import IconLayers from '~icons/app/layers';
-import IconDownscale from '~icons/app/downscale';
-import IconBroadcast from '~icons/app/downscale';
+import IconUsb from '~icons/app/usb';
 
 const router = useRouter();
 const query = ref('');
@@ -18,30 +19,29 @@ const tools = [
     description: 'Preview USB video stream and broadcast to a remote via SRT',
     icon: IconBroadcast,
   },
-  {
-    id: 'reorganize',
-    title: 'Reorganize Files',
-    description: 'Organize files based on spec.json',
-    icon: IconFolder,
-  },
+  // {
+  //   id: 'reorganize',
+  //   title: 'Reorganize Files',
+  //   description: 'Organize files based on spec.json',
+  //   icon: IconFolder,
+  // },
   {
     id: 'overlay',
     title: 'Add Overlay / Watermark',
     description: 'Apply watermark overlay to selected assets',
     icon: IconLayers,
   },
+  // {
+  //   id: 'sync',
+  //   title: 'Sync media',
+  //   description: 'Sync files across devices/cloud',
+  //   icon: IconDownscale,
+  // },
   {
-    id: 'sync',
-    title: 'Sync media',
-    description: 'Sync files across devices/cloud',
-    icon: IconDownscale,
-  },
-  // ---> NEW HARDWARE SECURITY TOOL <---
-  {
-    id: 'security',
-    title: 'Hardware Token Security',
-    description: 'Inspect DSC USB hardware tokens and sign SHA-256 digests natively',
-    icon: IconLayers, // Swap for a custom lock or shield icon if available in your collection
+    id: 'crypto-token',
+    title: 'Hardware Crypto Token',
+    description: 'Inspect DSC USB hardware tokens',
+    icon: IconUsb,
   },
 ];
 
