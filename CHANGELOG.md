@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.4.4
+
+[compare changes](https://github.com/Modest-Human-Brands/msync/compare/v0.4.3...v0.4.4)
+
+### 🏡 Chore
+
+- Trigger ci cd pipeline ([f121d73](https://github.com/Modest-Human-Brands/msync/commit/f121d73))
+
+### ❤️ Contributors
+
+- Shirsendu Bairagi ([@shba007](https://github.com/shba007))
+
 ## v0.4.3
 
 [compare changes](https://github.com/Modest-Human-Brands/msync/compare/v0.4.2...v0.4.3)
