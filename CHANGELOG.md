@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.4.2
+
+[compare changes](https://github.com/Modest-Human-Brands/msync/compare/v0.4.1...v0.4.2)
+
+### 🚀 Enhancements
+
+- Implement hsl streaming and device management ([2bfb0f3](https://github.com/Modest-Human-Brands/msync/commit/2bfb0f3))
+
+### 🎨 Styles
+
+- Replace Security view with Crypto Token view and update routing ([2e839ad](https://github.com/Modest-Human-Brands/msync/commit/2e839ad))
+
+### ❤️ Contributors
+
+- Shirsendu Bairagi ([@shba007](https://github.com/shba007))
+
 ## v0.4.1
 
 [compare changes](https://github.com/Modest-Human-Brands/msync/compare/v0.4.0...v0.4.1)
