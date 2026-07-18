@@ -52,7 +52,7 @@ jobs:
         run: bun run format
 
       - name: 🤖 AutoFix Code
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: 'chore: apply code fixes [skip ci]'
 
