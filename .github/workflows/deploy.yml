@@ -51,6 +51,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          lfs: true
 
       - name: Install OS Dependencies (Ubuntu only)
         if: matrix.platform == 'ubuntu-latest' # This must match the platform value defined above.
