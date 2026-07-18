@@ -10,8 +10,6 @@
 
 ## Spec
 
-## 1. Architectural Core
-
 ### 1.1 The Local P2P Mesh Layer (LAN Node Matrix)
 
 - **Decentralized Discovery:** Utilizes **mDNS / ZeroConf** to instantly detect peer active instances of MSync running on the same local subnet without central server configuration.

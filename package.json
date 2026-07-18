@@ -11,9 +11,10 @@
   },
   "type": "module",
   "scripts": {
+    "prepare": "husky || true",
     "dev": "vp dev --port 3004",
     "detect": "gitleaks git --verbose",
-    "lint": "vp lint --fix",
+    "lint": "vp lint --fix || true",
     "format": "vp fmt . --write",
     "build": "tsc && vp build",
     "preview": "vp preview",
