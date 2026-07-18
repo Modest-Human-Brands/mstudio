@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.4.5
+
+[compare changes](https://github.com/Modest-Human-Brands/msync/compare/v0.4.4...v0.4.5)
+
+### 🩹 Fixes
+
+- Lfs: true in ci ([6ba5d65](https://github.com/Modest-Human-Brands/msync/commit/6ba5d65))
+
+### 🏡 Chore
+
+- Update git-auto-commit-action to v7 ([8f2dc4a](https://github.com/Modest-Human-Brands/msync/commit/8f2dc4a))
+
+### ❤️ Contributors
+
+- Shirsendu Bairagi ([@shba007](https://github.com/shba007))
+
 ## v0.4.4
 
 [compare changes](https://github.com/Modest-Human-Brands/msync/compare/v0.4.3...v0.4.4)
