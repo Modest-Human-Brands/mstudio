@@ -1,4 +1,4 @@
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 use std::{ptr::null_mut, slice};
 
 #[cfg(target_os = "windows")]

@@ -16,5 +16,6 @@ declare module 'vue' {
     OverlaySidePanel: typeof import('./src/components/Overlay/OverlaySidePanel.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    VideoPlayer: typeof import('./src/components/VideoPlayer.vue')['default']
   }
 }

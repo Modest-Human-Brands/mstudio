@@ -16,26 +16,19 @@ const selectedCert = computed(
   () => certificates.value.find((c) => c.index === selectedCertIndex.value) ?? null,
 );
 
-/**
- * Parses X.500 Distinguished Names to extract a clean Common Name (CN),
- * falling back gracefully if CN is missing from the hardware token context.
- */
 function extractCommonName(dn: string): string {
   if (!dn) return '';
 
-  // Look for the CN= attribute anywhere in the string path
   const cnMatch = dn.match(/(?:^|,\s*)CN\s*=\s*([^,]+)/i);
   if (cnMatch && cnMatch[1]) {
     return cnMatch[1].replace(/^["']|["']$/g, '').trim();
   }
 
-  // Fallback 1: Use Organization Name if CN isn't explicitly defined
   const oMatch = dn.match(/(?:^|,\s*)O\s*=\s*([^,]+)/i);
   if (oMatch && oMatch[1]) {
     return oMatch[1].replace(/^["']|["']$/g, '').trim();
   }
 
-  // Fallback 2: Clean up the first token block if all else fails
   const parts = dn.split(',');
   if (parts[0] && parts[0].includes('=')) {
     return parts[0].split('=')[1]!.trim();
@@ -86,7 +79,6 @@ onMounted(() => {
 
 <template>
   <ToolLayout>
-    <!-- Adobe Styled Header -->
     <template #header>
       <div class="flex items-center justify-between w-full">
         <h1 class="text-base font-bold text-white tracking-wide">Sign with a Digital ID</h1>
@@ -109,23 +101,18 @@ onMounted(() => {
       </div>
     </template>
 
-    <!-- Main Content Body -->
     <div class="p-5 w-full mx-auto flex flex-col gap-6 overflow-y-auto h-full text-sm text-white">
-      <!-- Certificate List Container -->
       <div class="flex flex-col gap-3">
-        <!-- Empty State -->
         <div
           v-if="certificates.length === 0"
           class="text-sm text-white/40 py-12 border border-dashed border-white/10 rounded-xl text-center flex flex-col items-center gap-2 bg-black/10"
         >
           <span class="text-3xl">🔌</span>
           <span class="font-medium text-white/70">No hardware DSC tokens detected.</span>
-          <span class="text-xs text-white/40"
-            >Ensure your USB ePass2003 / mToken is securely plugged in.</span
-          >
+          <span class="text-xs text-white/40">
+            Ensure your USB ePass2003 / mToken is securely plugged in.
+          </span>
         </div>
-
-        <!-- Populated List -->
         <div v-else class="flex flex-col gap-2">
           <div
             v-for="cert in certificates"
@@ -137,12 +124,10 @@ onMounted(() => {
                 : 'border-transparent bg-transparent hover:bg-white/[0.01]'
             "
           >
-            <!-- Left Side: Radio Button, Icon, & Info -->
             <div
               class="flex items-start gap-4 min-w-0 grow cursor-pointer"
               @click="selectedCertIndex = cert.index"
             >
-              <!-- Custom Adobe-style Radio Circle -->
               <div class="mt-1.5 shrink-0 flex items-center justify-center">
                 <div
                   class="size-[18px] rounded-full border-2 flex items-center justify-center transition-all"
@@ -159,7 +144,6 @@ onMounted(() => {
                 </div>
               </div>
 
-              <!-- Digital ID Badge / Certificate Icon -->
               <div class="shrink-0 text-white/70 bg-white/5 p-2 rounded border border-white/10">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -178,7 +162,6 @@ onMounted(() => {
                 </svg>
               </div>
 
-              <!-- Main Prettified Metadata Texts -->
               <div class="min-w-0 grow">
                 <div class="text-sm font-semibold text-white truncate">
                   {{ formatSubjectTitle(cert.subject) }}
@@ -196,7 +179,6 @@ onMounted(() => {
               </div>
             </div>
 
-            <!-- Right Side: View Details Action -->
             <div class="shrink-0 self-start pt-1">
               <button
                 @click="showInspector = !showInspector"
@@ -213,7 +195,6 @@ onMounted(() => {
         </div>
       </div>
 
-      <!-- Expandable Cryptographic Inspector Panel (Keeps complete info for verification) -->
       <transition name="fade">
         <div
           v-if="showInspector && selectedCert"
@@ -225,9 +206,9 @@ onMounted(() => {
             </h3>
           </div>
           <div>
-            <span class="text-[10px] font-mono text-white/40 uppercase block mb-1"
-              >Full Subject Distinguished Name</span
-            >
+            <span class="text-[10px] font-mono text-white/40 uppercase block mb-1">
+              Full Subject Distinguished Name
+            </span>
             <div
               class="p-2.5 rounded bg-black/40 border border-white/5 font-mono text-white/80 break-all select-all"
             >
@@ -257,7 +238,6 @@ onMounted(() => {
       </transition>
     </div>
 
-    <!-- Adobe Styled Pill Action Footer -->
     <template #footer>
       <div class="flex items-center gap-2 text-white/50 font-medium">
         <button
