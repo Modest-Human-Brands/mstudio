@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.4.3
+
+[compare changes](https://github.com/Modest-Human-Brands/msync/compare/v0.4.2...v0.4.3)
+
+### 🩹 Fixes
+
+- Added lfs to ci pipeline ([0243cb1](https://github.com/Modest-Human-Brands/msync/commit/0243cb1))
+
+### ❤️ Contributors
+
+- Shirsendu Bairagi ([@shba007](https://github.com/shba007))
+
 ## v0.4.2
 
 [compare changes](https://github.com/Modest-Human-Brands/msync/compare/v0.4.1...v0.4.2)
