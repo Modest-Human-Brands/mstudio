@@ -6,8 +6,8 @@ import Home from './pages/index.vue';
 import Stream from './pages/stream.vue';
 // import Organize from './pages/organize.vue'
 import Overlay from './pages/overlay.vue';
-import CryptoToken from './pages/crypto-token.vue'; // <-- Import Security View
 // import Sync from "./pages/sync.vue";
+import CryptoToken from './pages/crypto-token.vue';
 
 const routes = [
   { path: '/', name: 'home', component: Home },

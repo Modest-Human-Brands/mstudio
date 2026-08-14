@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router';
 import ToolLayout from '../layouts/ToolLayout.vue';
 
 import IconBroadcast from '~icons/app/broadcast';
-// import IconDownscale from '~icons/app/downscale';
+import IconLink from '~icons/app/link';
 // import IconFolder from '~icons/app/folder';
 import IconLayers from '~icons/app/layers';
 import IconUsb from '~icons/app/usb';
@@ -31,15 +31,15 @@ const tools = [
     description: 'Apply watermark overlay to selected assets',
     icon: IconLayers,
   },
-  // {
-  //   id: 'sync',
-  //   title: 'Sync media',
-  //   description: 'Sync files across devices/cloud',
-  //   icon: IconDownscale,
-  // },
+  {
+    id: 'sync',
+    title: 'Sync media',
+    description: 'Sync files across devices/cloud',
+    icon: IconLink,
+  },
   {
     id: 'crypto-token',
-    title: 'Hardware Crypto Token',
+    title: 'Hardware Security Module',
     description: 'Inspect DSC USB hardware tokens',
     icon: IconUsb,
   },

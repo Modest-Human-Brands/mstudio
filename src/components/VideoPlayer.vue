@@ -19,6 +19,15 @@ onMounted(() => {
         muted: true,
         controls: false,
         preload: 'auto',
+        liveui: true,
+        html5: {
+          vhs: {
+            liveSyncDurationCount: 1,
+            liveMaxLatencyDurationCount: 2,
+            bandwidth: 10000000,
+            useBandwidthFromLocalStorage: false,
+          },
+        },
       },
       () => {
         player?.src({ src: props.src, type: 'application/x-mpegURL' });

@@ -1,5 +1,5 @@
 use std::sync::Mutex;
-use tauri::Emitter;
+// use tauri::Emitter;
 use tauri_plugin_shell::process::CommandChild;
 use tauri_plugin_shell::process::CommandEvent;
 use tauri_plugin_shell::ShellExt;
@@ -13,7 +13,7 @@ pub struct MediaDevices {
 }
 
 pub fn get_hls_dir() -> std::path::PathBuf {
-    let dir = std::env::temp_dir().join("tauri_hls_stream");
+    let dir = std::env::temp_dir().join("msync_hsl_stream");
     let _ = std::fs::create_dir_all(&dir);
     dir
 }
@@ -133,6 +133,8 @@ pub async fn start_stream(
         "-y".to_string(),
         "-f".to_string(),
         "dshow".to_string(),
+        "-rtbufsize".to_string(),
+        "100M".to_string(),
         "-i".to_string(),
         video_input,
         "-f".to_string(),
@@ -171,17 +173,19 @@ pub async fn start_stream(
         "-c:v".to_string(),
         "libx264".to_string(),
         "-preset".to_string(),
-        "ultrafast".to_string(),
+        "veryfast".to_string(),
         "-tune".to_string(),
         "zerolatency".to_string(),
-        "-maxrate".to_string(),
-        "2000k".to_string(),
-        "-bufsize".to_string(),
-        "4000k".to_string(),
+        "-crf".to_string(),
+        "18".to_string(),
         "-pix_fmt".to_string(),
         "yuv420p".to_string(),
         "-g".to_string(),
-        "60".to_string(),
+        "15".to_string(),
+        "-keyint_min".to_string(),
+        "15".to_string(),
+        "-sc_threshold".to_string(),
+        "0".to_string(),
         "-c:a".to_string(),
         "aac".to_string(),
         "-b:a".to_string(),
@@ -189,11 +193,15 @@ pub async fn start_stream(
         "-f".to_string(),
         "hls".to_string(),
         "-hls_time".to_string(),
-        "2".to_string(),
+        "0.5".to_string(),
         "-hls_list_size".to_string(),
         "3".to_string(),
         "-hls_flags".to_string(),
-        "delete_segments".to_string(),
+        "delete_segments+independent_segments".to_string(),
+        "-hls_segment_type".to_string(),
+        "fmp4".to_string(),
+        "-hls_fmp4_init_filename".to_string(),
+        "init.mp4".to_string(),
         hls_path.to_str().unwrap().to_string(),
     ]);
 
@@ -201,7 +209,8 @@ pub async fn start_stream(
         .shell()
         .sidecar("ffmpeg")
         .map_err(|e| e.to_string())?
-        .args(ffmpeg_args);
+        .args(ffmpeg_args)
+        .current_dir(hls_dir);
 
     let (mut rx, child) = sidecar_command.spawn().map_err(|e| e.to_string())?;
 
@@ -210,9 +219,9 @@ pub async fn start_stream(
     tauri::async_runtime::spawn(async move {
         while let Some(event) = rx.recv().await {
             match event {
-                CommandEvent::Stdout(line) | CommandEvent::Stderr(line) => {
-                    let log = String::from_utf8_lossy(&line).to_string();
-                    let _ = app.emit("ffmpeg-log", log);
+                CommandEvent::Stdout(_line) | CommandEvent::Stderr(_line) => {
+                    // let log = String::from_utf8_lossy(&line).to_string();
+                    // let _ = app.emit("ffmpeg-log", &log);
                 }
                 _ => {}
             }

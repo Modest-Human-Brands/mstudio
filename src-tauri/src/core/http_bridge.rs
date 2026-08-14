@@ -67,7 +67,7 @@ pub async fn start_http_server(app_handle: tauri::AppHandle) {
         HeaderValue::from_static("true"),
     );
 
-    let hls_dir = std::env::temp_dir().join("tauri_hls_stream");
+    let hls_dir = std::env::temp_dir().join("msync_hsl_stream");
     let _ = std::fs::create_dir_all(&hls_dir);
 
     let axum_app = Router::new()
