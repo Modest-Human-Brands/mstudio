@@ -1,26 +1,13 @@
-import { createApp } from 'vue';
-import { createRouter, createWebHashHistory } from 'vue-router';
-import App from './App.vue';
+import { createApp } from 'vue'
+import { createPinia } from 'pinia'
 
-import Home from './pages/index.vue';
-import Stream from './pages/stream.vue';
-// import Organize from './pages/organize.vue'
-import Overlay from './pages/overlay.vue';
-// import Sync from "./pages/sync.vue";
-import CryptoToken from './pages/crypto-token.vue';
+import App from './App.vue'
+import router from './router'
+import './style.css'
 
-const routes = [
-  { path: '/', name: 'home', component: Home },
-  { path: '/stream', name: 'stream', component: Stream },
-  // { path: '/organize', name: 'organize', component: Organize },
-  { path: '/overlay', name: 'overlay', component: Overlay },
-  // { path: "/sync", name: "sync", component: Sync },
-  { path: '/crypto-token', name: 'crypto-token', component: CryptoToken },
-];
+const app = createApp(App)
 
-export const router = createRouter({
-  history: createWebHashHistory(),
-  routes,
-});
+app.use(createPinia())
+app.use(router)
 
-createApp(App).use(router).mount('#app');
+app.mount('#app')

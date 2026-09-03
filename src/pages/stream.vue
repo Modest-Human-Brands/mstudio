@@ -1,105 +1,105 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed, watch } from 'vue';
-import { invoke } from '@tauri-apps/api/core';
-import VideoPlayer from '../components/VideoPlayer.vue';
-import { useRouter } from 'vue-router';
-import ToolLayout from '../layouts/ToolLayout.vue';
+import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
+import { invoke } from '@tauri-apps/api/core'
+import VideoPlayer from '../components/VideoPlayer.vue'
+import { useRouter } from 'vue-router'
+import ToolLayout from '../layouts/ToolLayout.vue'
 
-const router = useRouter();
+const router = useRouter()
 
-const streamKey = ref('');
-const statusMessage = ref('Fetching native hardware states...');
-const isStreaming = ref(false);
-const isPreviewReady = ref(false);
-const isLoadingDevices = ref(true);
+const streamKey = ref('')
+const statusMessage = ref('Fetching native hardware states...')
+const isStreaming = ref(false)
+const isPreviewReady = ref(false)
+const isLoadingDevices = ref(true)
 
 interface MediaDevices {
-  video: string[];
-  audio: string[];
+  video: string[]
+  audio: string[]
 }
-const cameras = ref<string[]>([]);
-const mics = ref<string[]>([]);
-const selectedCamera = ref<string>('');
-const selectedMic = ref<string>('');
-const previewTimestamp = ref(Date.now());
+const cameras = ref<string[]>([])
+const mics = ref<string[]>([])
+const selectedCamera = ref<string>('')
+const selectedMic = ref<string>('')
+const previewTimestamp = ref(Date.now())
 
 const previewUrl = computed(() => {
-  if (!selectedCamera.value) return '';
-  return `http://127.0.0.1:8720/api/preview/index.m3u8?t=${previewTimestamp.value}`;
-});
+  if (!selectedCamera.value) return ''
+  return `http://127.0.0.1:8720/api/preview/index.m3u8?t=${previewTimestamp.value}`
+})
 
 watch(selectedCamera, () => {
-  previewTimestamp.value = Date.now();
-});
+  previewTimestamp.value = Date.now()
+})
 
 async function fetchNativeDevices() {
-  isLoadingDevices.value = true;
+  isLoadingDevices.value = true
   try {
-    const devices = await invoke<MediaDevices>('get_devices');
-    cameras.value = devices.video;
-    mics.value = devices.audio;
+    const devices = await invoke<MediaDevices>('get_devices')
+    cameras.value = devices.video
+    mics.value = devices.audio
 
-    if (cameras.value.length > 0) selectedCamera.value = cameras.value[0];
-    if (mics.value.length > 0) selectedMic.value = mics.value[0];
+    if (cameras.value.length > 0) selectedCamera.value = cameras.value[0]
+    if (mics.value.length > 0) selectedMic.value = mics.value[0]
 
-    statusMessage.value = 'Hardware synchronization complete.';
+    statusMessage.value = 'Hardware synchronization complete.'
   } catch (err) {
-    statusMessage.value = `Hardware scan failed: ${String(err)}`;
+    statusMessage.value = `Hardware scan failed: ${String(err)}`
   } finally {
-    isLoadingDevices.value = false;
+    isLoadingDevices.value = false
   }
 }
 
 onMounted(async () => {
-  await fetchNativeDevices();
-});
+  await fetchNativeDevices()
+})
 
 onUnmounted(() => {
-  invoke('stop_preview');
-});
+  invoke('stop_preview')
+})
 
 async function handleStartStream() {
-  if (!selectedCamera.value || !selectedMic.value) return;
+  if (!selectedCamera.value || !selectedMic.value) return
 
   try {
-    isStreaming.value = true;
+    isStreaming.value = true
     statusMessage.value = streamKey.value
       ? 'Reconfiguring hardware for live broadcast...'
-      : 'Generating Local Stream...';
+      : 'Generating Local Stream...'
 
     const response = await invoke<string>('start_stream', {
       streamKey: streamKey.value,
       videoDevice: selectedCamera.value,
       audioDevice: selectedMic.value,
-    });
+    })
 
-    statusMessage.value = response;
+    statusMessage.value = response
 
-    let ready = false;
-    let attempts = 0;
+    let ready = false
+    let attempts = 0
     while (!ready && attempts < 30 && isStreaming.value) {
       try {
-        const res = await fetch('http://127.0.0.1:8720/api/preview/index.m3u8', { method: 'HEAD' });
+        const res = await fetch('http://127.0.0.1:8720/api/preview/index.m3u8', { method: 'HEAD' })
         if (res.ok) {
-          ready = true;
-          break;
+          ready = true
+          break
         }
       } catch (err) {
         /* Ignore connection refused while FFmpeg boots */
       }
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      attempts++;
+      await new Promise((resolve) => setTimeout(resolve, 500))
+      attempts++
     }
 
     if (ready && isStreaming.value) {
-      isPreviewReady.value = true;
+      isPreviewReady.value = true
     } else if (isStreaming.value) {
-      isStreaming.value = false;
-      statusMessage.value = 'Failed to generate local stream (Timeout).';
+      isStreaming.value = false
+      statusMessage.value = 'Failed to generate local stream (Timeout).'
     }
   } catch (error) {
-    isStreaming.value = false;
-    statusMessage.value = `Process Failed: ${error}`;
+    isStreaming.value = false
+    statusMessage.value = `Process Failed: ${error}`
   }
 }
 </script>
@@ -160,7 +160,7 @@ async function handleStartStream() {
         class="absolute inset-0 flex flex-col items-center justify-center bg-black/80 backdrop-blur-md z-0 gap-4"
       >
         <div
-          class="size-8 border-4 border-primary-500 border-t-transparent rounded-full animate-spin"
+          class="size-8 border-4 border-accent-500 border-t-transparent rounded-full animate-spin"
         ></div>
         <span class="text-white/90 font-semibold text-lg tracking-widest uppercase"
           >Buffering Stream...</span
@@ -267,7 +267,7 @@ async function handleStartStream() {
         </div>
 
         <div
-          class="relative flex items-center bg-white/10 focus-within:bg-white/20 transition-colors rounded-xl w-full overflow-hidden border border-transparent focus-within:border-primary-500/50"
+          class="relative flex items-center bg-white/10 focus-within:bg-white/20 transition-colors rounded-xl w-full overflow-hidden border border-transparent focus-within:border-accent-500/50"
         >
           <div class="pl-3 py-2 pr-1 flex items-center justify-center pointer-events-none">
             <svg class="size-4 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -309,7 +309,7 @@ async function handleStartStream() {
           </svg>
           <span
             class="text-xs font-mono truncate max-w-full"
-            :class="isStreaming ? 'text-primary-400 font-bold' : ''"
+            :class="isStreaming ? 'text-accent-400 font-bold' : ''"
           >
             {{ statusMessage }}
           </span>
@@ -331,7 +331,7 @@ async function handleStartStream() {
                   ? 'bg-red-600 shadow-red-500/20 cursor-default'
                   : 'bg-green-600 shadow-green-500/20 cursor-default'
                 : streamKey
-                  ? 'bg-primary-600 hover:bg-primary-500 cursor-pointer shadow-primary-500/20'
+                  ? 'bg-accent-600 hover:bg-accent-500 cursor-pointer shadow-accent-500/20'
                   : 'bg-white/20 hover:bg-white/30 cursor-pointer'
             "
             :disabled="isStreaming"

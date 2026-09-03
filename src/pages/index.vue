@@ -1,23 +1,23 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { useRouter } from 'vue-router';
-import ToolLayout from '../layouts/ToolLayout.vue';
+import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import ToolLayout from '../layouts/ToolLayout.vue'
 
-import IconBroadcast from '~icons/app/broadcast';
-import IconLink from '~icons/app/link';
+import IconAppBroadcast from '~icons/app/broadcast'
+// import IconAppLink from '~icons/app/link'
 // import IconFolder from '~icons/app/folder';
-import IconLayers from '~icons/app/layers';
-import IconUsb from '~icons/app/usb';
+import IconAppLayers from '~icons/app/layers'
+import IconAppUsb from '~icons/app/usb'
 
-const router = useRouter();
-const query = ref('');
+const router = useRouter()
+const query = ref('')
 
 const tools = [
   {
     id: 'stream',
     title: 'Stream media',
     description: 'Preview USB video stream and broadcast to a remote via SRT',
-    icon: IconBroadcast,
+    icon: IconAppBroadcast,
   },
   // {
   //   id: 'reorganize',
@@ -29,29 +29,29 @@ const tools = [
     id: 'overlay',
     title: 'Add Overlay / Watermark',
     description: 'Apply watermark overlay to selected assets',
-    icon: IconLayers,
+    icon: IconAppLayers,
   },
-  {
-    id: 'sync',
-    title: 'Sync media',
-    description: 'Sync files across devices/cloud',
-    icon: IconLink,
-  },
+  // {
+  //   id: 'sync',
+  //   title: 'Sync media',
+  //   description: 'Sync files across devices/cloud',
+  //   icon: IconAppLink,
+  // },
   {
     id: 'crypto-token',
     title: 'Hardware Security Module',
     description: 'Inspect DSC USB hardware tokens',
-    icon: IconUsb,
+    icon: IconAppUsb,
   },
-];
+]
 
 const filtered = computed(() =>
   tools.filter((t) => (t.title + t.description).toLowerCase().includes(query.value.toLowerCase())),
-);
+)
 
 function onSubmit() {
   if (filtered.value[0]) {
-    router.push(`/${filtered.value[0].id}`);
+    router.push(`/${filtered.value[0].id}`)
   }
 }
 </script>

@@ -1,15 +1,11 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
-  "description": "Capability for the main window",
+  "description": "enables the default permissions",
   "windows": ["main"],
   "permissions": [
     "core:default",
-    "opener:default",
-    "dialog:default",
-    "fs:default",
-    "fs:read-all",
-    "shell:default",
+    "process:default",
     {
       "identifier": "shell:allow-execute",
       "allow": [
@@ -24,6 +20,10 @@
           "args": true
         }
       ]
-    }
+    },
+    "shell:default",
+    "opener:default",
+    "fs:default",
+    "dialog:default"
   ]
 }

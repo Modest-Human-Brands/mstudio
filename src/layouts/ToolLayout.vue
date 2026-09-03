@@ -1,31 +1,31 @@
 <script setup lang="ts">
-import { useMagicKeys, watchArray } from '@vueuse/core';
-import { computed } from 'vue';
-import { useRouter } from 'vue-router';
+import { useMagicKeys, watchArray } from '@vueuse/core'
+import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 
 const props = withDefaults(defineProps<{ query?: string; preventEscape?: boolean }>(), {
   query: '',
   preventEscape: false,
-});
+})
 
 const emit = defineEmits<{
-  'submit:query': [];
-  'update:query': [value: string];
-  action: [value: 'enter' | 'escape'];
-}>();
+  'submit:query': []
+  'update:query': [value: string]
+  action: [value: 'enter' | 'escape']
+}>()
 
-const { current } = useMagicKeys();
-const keys = computed(() => Array.from(current));
-const router = useRouter();
+const { current } = useMagicKeys()
+const keys = computed(() => Array.from(current))
+const router = useRouter()
 
 watchArray(keys, (value) => {
   if (value.includes('escape')) {
-    emit('action', 'escape');
-    if (!props.preventEscape) router.back();
+    emit('action', 'escape')
+    if (!props.preventEscape) router.back()
   } else if (value.includes('enter')) {
-    emit('action', 'enter');
+    emit('action', 'enter')
   }
-});
+})
 </script>
 
 <template>

@@ -1,27 +1,27 @@
 {
-  "$schema": "https://schema.tauri.app/config/2",
+  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "MSync",
   "version": "../package.json",
   "identifier": "com.modesthumanbrands.msync",
   "build": {
     "frontendDist": "../dist",
-    "devUrl": "http://localhost:3004",
-    "beforeDevCommand": "bun run dev",
-    "beforeBuildCommand": "bun run build"
+    "devUrl": "http://localhost:5173",
+    "beforeDevCommand": "dotenvx run -f .env.native -- vp dev",
+    "beforeBuildCommand": "dotenvx run -f .env.native -- vp build"
   },
   "app": {
     "windows": [
       {
+        "label": "main",
+        "visible": true,
+        "url": "/",
+        "title": "MSync",
         "width": 750,
         "height": 472,
         "decorations": false,
         "transparent": true,
         "resizable": false,
         "center": true,
-        "label": "main",
-        "visible": true,
-        "url": "/",
-        "title": "MSync",
         "fullscreen": false
       }
     ],
@@ -43,6 +43,18 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
-    "externalBin": ["bin/ffmpeg", "bin/ffprobe"]
+    "externalBin": ["bin/ffmpeg", "bin/ffprobe"],
+    "android": {
+      "debugApplicationIdSuffix": ".debug"
+    },
+    "createUpdaterArtifacts": true
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "",
+      "endpoints": [
+        "https://github.com/Modest-Human-Brands/msync/releases/latest/download/latest.json"
+      ]
+    }
   }
 }

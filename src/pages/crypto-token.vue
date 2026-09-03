@@ -1,68 +1,66 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
-import { invoke } from '@tauri-apps/api/core';
-import { useRouter } from 'vue-router';
-import ToolLayout from '../layouts/ToolLayout.vue';
-import type { CertItem } from '../types';
+import { ref, computed, onMounted } from 'vue'
+import { invoke } from '@tauri-apps/api/core'
+import { useRouter } from 'vue-router'
+import ToolLayout from '../layouts/ToolLayout.vue'
+import type { CertItem } from '../types'
 
-const router = useRouter();
-const certificates = ref<CertItem[]>([]);
-const selectedCertIndex = ref<number | null>(null);
-const statusMessage = ref('Scanning Windows Certificate Store...');
-const isLoading = ref(false);
-const showInspector = ref(false);
+const router = useRouter()
+const certificates = ref<CertItem[]>([])
+const selectedCertIndex = ref<number | null>(null)
+const statusMessage = ref('Scanning Windows Certificate Store...')
+const isLoading = ref(false)
+const showInspector = ref(false)
 
 const selectedCert = computed(
   () => certificates.value.find((c) => c.index === selectedCertIndex.value) ?? null,
-);
+)
 
 function extractCommonName(dn: string): string {
-  if (!dn) return '';
+  if (!dn) return ''
 
-  const cnMatch = dn.match(/(?:^|,\s*)CN\s*=\s*([^,]+)/i);
+  const cnMatch = dn.match(/(?:^|,\s*)CN\s*=\s*([^,]+)/i)
   if (cnMatch && cnMatch[1]) {
-    return cnMatch[1].replace(/^["']|["']$/g, '').trim();
+    return cnMatch[1].replace(/^["']|["']$/g, '').trim()
   }
 
-  const oMatch = dn.match(/(?:^|,\s*)O\s*=\s*([^,]+)/i);
+  const oMatch = dn.match(/(?:^|,\s*)O\s*=\s*([^,]+)/i)
   if (oMatch && oMatch[1]) {
-    return oMatch[1].replace(/^["']|["']$/g, '').trim();
+    return oMatch[1].replace(/^["']|["']$/g, '').trim()
   }
 
-  const parts = dn.split(',');
+  const parts = dn.split(',')
   if (parts[0] && parts[0].includes('=')) {
-    return parts[0].split('=')[1]!.trim();
+    return parts[0].split('=')[1]!.trim()
   }
 
-  return dn;
+  return dn
 }
 
 function formatSubjectTitle(dn: string): string {
-  const cleanName = extractCommonName(dn) || 'Unknown Identity';
-  return `${cleanName} (Windows Digital ID)`;
+  const cleanName = extractCommonName(dn) || 'Unknown Identity'
+  return `${cleanName} (Windows Digital ID)`
 }
 
 function formatIssuerSub(dn: string): string {
-  const cleanIssuer = extractCommonName(dn) || 'Unknown Certificate Authority';
-  return `Issued by: ${cleanIssuer}`;
+  const cleanIssuer = extractCommonName(dn) || 'Unknown Certificate Authority'
+  return `Issued by: ${cleanIssuer}`
 }
 
 async function fetchCertificates() {
-  isLoading.value = true;
-  statusMessage.value = 'Accessing hardware tokens...';
+  isLoading.value = true
+  statusMessage.value = 'Accessing hardware tokens...'
   try {
-    const res = await invoke<{ total_count: number; certificates: CertItem[] }>(
-      'list_certificates',
-    );
-    certificates.value = res.certificates;
+    const res = await invoke<{ total_count: number; certificates: CertItem[] }>('list_certificates')
+    certificates.value = res.certificates
     if (res.total_count > 0 && selectedCertIndex.value === null) {
-      selectedCertIndex.value = certificates.value[0]!.index;
+      selectedCertIndex.value = certificates.value[0]!.index
     }
-    statusMessage.value = `Found ${res.total_count} active certificate(s).`;
+    statusMessage.value = `Found ${res.total_count} active certificate(s).`
   } catch (err) {
-    statusMessage.value = `Error: ${String(err)}`;
+    statusMessage.value = `Error: ${String(err)}`
   } finally {
-    isLoading.value = false;
+    isLoading.value = false
   }
 }
 
@@ -73,8 +71,8 @@ async function fetchCertificates() {
 // }
 
 onMounted(() => {
-  fetchCertificates();
-});
+  fetchCertificates()
+})
 </script>
 
 <template>
@@ -133,13 +131,13 @@ onMounted(() => {
                   class="size-[18px] rounded-full border-2 flex items-center justify-center transition-all"
                   :class="
                     selectedCertIndex === cert.index
-                      ? 'border-primary-500 bg-transparent'
+                      ? 'border-accent-500 bg-transparent'
                       : 'border-white/40'
                   "
                 >
                   <div
                     v-if="selectedCertIndex === cert.index"
-                    class="size-[8px] rounded-full bg-primary-500"
+                    class="size-[8px] rounded-full bg-accent-500"
                   />
                 </div>
               </div>
@@ -158,7 +156,7 @@ onMounted(() => {
                     stroke-linejoin="round"
                     d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                   />
-                  <circle cx="12" cy="9" r="2" class="stroke-primary-400" stroke-width="2" />
+                  <circle cx="12" cy="9" r="2" class="stroke-accent-400" stroke-width="2" />
                 </svg>
               </div>
 
@@ -182,7 +180,7 @@ onMounted(() => {
             <div class="shrink-0 self-start pt-1">
               <button
                 @click="showInspector = !showInspector"
-                class="text-primary-400 hover:text-primary-300 transition-colors text-xs font-semibold cursor-pointer underline underline-offset-4"
+                class="text-accent-400 hover:text-accent-300 transition-colors text-xs font-semibold cursor-pointer underline underline-offset-4"
               >
                 {{
                   showInspector && selectedCertIndex === cert.index
@@ -282,7 +280,7 @@ onMounted(() => {
         </button>
 
         <!-- <button class="px-6 py-1.5 rounded-full text-white text-xs font-semibold transition-all tracking-wide shadow-sm"
-          :class="selectedCertIndex !== null ? 'bg-primary-500 hover:bg-primary-600 cursor-pointer' : 'bg-white/10 text-white/30 cursor-not-allowed'"
+          :class="selectedCertIndex !== null ? 'bg-accent-500 hover:bg-accent-600 cursor-pointer' : 'bg-white/10 text-white/30 cursor-not-allowed'"
           :disabled="selectedCertIndex === null" @click="handleContinue">
           Continue
         </button> -->

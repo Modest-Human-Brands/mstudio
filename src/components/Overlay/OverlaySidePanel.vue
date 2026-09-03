@@ -1,54 +1,54 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import NumericInput from '../NumericInput.vue';
+import { computed } from 'vue'
+import NumericInput from '../NumericInput.vue'
 
-const hAlign = defineModel<'left' | 'center' | 'right'>('hAlign', { required: true });
-const vAlign = defineModel<'top' | 'middle' | 'bottom'>('vAlign', { required: true });
-const wmScale = defineModel<number>('wmScale', { required: true });
-const wmOpacity = defineModel<number>('wmOpacity', { required: true });
-const heightLocked = defineModel<boolean>('heightLocked', { required: true });
-const wmManualHeight = defineModel<number>('wmManualHeight', { required: true });
+const hAlign = defineModel<'left' | 'center' | 'right'>('hAlign', { required: true })
+const vAlign = defineModel<'top' | 'middle' | 'bottom'>('vAlign', { required: true })
+const wmScale = defineModel<number>('wmScale', { required: true })
+const wmOpacity = defineModel<number>('wmOpacity', { required: true })
+const heightLocked = defineModel<boolean>('heightLocked', { required: true })
+const wmManualHeight = defineModel<number>('wmManualHeight', { required: true })
 
 const props = defineProps<{
-  watermarkName: string;
-  watermarkSrc: string;
-  watermarkNaturalSize: { w: number; h: number };
-  positionX: number;
-  positionY: number;
-  wmWidthPx: number;
-  wmHeightPx: number;
-  canvasWidth: number;
-}>();
+  watermarkName: string
+  watermarkSrc: string
+  watermarkNaturalSize: { w: number; h: number }
+  positionX: number
+  positionY: number
+  wmWidthPx: number
+  wmHeightPx: number
+  canvasWidth: number
+}>()
 
-const emit = defineEmits<{ 'browse-watermark': [] }>();
+const emit = defineEmits<{ 'browse-watermark': [] }>()
 
 const opacityPercent = computed({
   get: () => Math.round(wmOpacity.value * 100),
   set: (v) => {
-    wmOpacity.value = v / 100;
+    wmOpacity.value = v / 100
   },
-});
+})
 
 function onWidthInput(val: number) {
-  wmScale.value = Math.max(1, Math.round((val / props.canvasWidth) * 100));
+  wmScale.value = Math.max(1, Math.round((val / props.canvasWidth) * 100))
 }
 
 function toggleLock() {
-  if (heightLocked.value) wmManualHeight.value = props.wmHeightPx;
-  heightLocked.value = !heightLocked.value;
+  if (heightLocked.value) wmManualHeight.value = props.wmHeightPx
+  heightLocked.value = !heightLocked.value
 }
 
 const H_ALIGNS: { value: 'left' | 'center' | 'right'; rect: [number, number, number, number] }[] = [
   { value: 'left', rect: [2, 5, 5, 6] },
   { value: 'center', rect: [5.5, 5, 5, 6] },
   { value: 'right', rect: [9, 5, 5, 6] },
-];
+]
 
 const V_ALIGNS: { value: 'top' | 'middle' | 'bottom'; rect: [number, number, number, number] }[] = [
   { value: 'top', rect: [5, 2, 6, 5] },
   { value: 'middle', rect: [5, 5.5, 6, 5] },
   { value: 'bottom', rect: [5, 9, 6, 5] },
-];
+]
 </script>
 
 <template>
@@ -104,7 +104,7 @@ const V_ALIGNS: { value: 'top' | 'middle' | 'bottom'; rect: [number, number, num
               class="p-1.5 transition-colors"
               :class="
                 hAlign === a.value
-                  ? 'bg-primary-500/20 text-primary-500'
+                  ? 'bg-accent-500/20 text-accent-500'
                   : 'text-white/30 hover:text-white/60 hover:bg-white/5'
               "
               @click="hAlign = a.value"
@@ -138,7 +138,7 @@ const V_ALIGNS: { value: 'top' | 'middle' | 'bottom'; rect: [number, number, num
               class="p-1.5 transition-colors"
               :class="
                 vAlign === a.value
-                  ? 'bg-primary-500/20 text-primary-500'
+                  ? 'bg-accent-500/20 text-accent-500'
                   : 'text-white/30 hover:text-white/60 hover:bg-white/5'
               "
               @click="vAlign = a.value"
@@ -187,7 +187,7 @@ const V_ALIGNS: { value: 'top' | 'middle' | 'bottom'; rect: [number, number, num
             />
             <button
               class="p-1 rounded transition-colors shrink-0"
-              :class="heightLocked ? 'text-primary-500' : 'text-white/20 hover:text-white/50'"
+              :class="heightLocked ? 'text-accent-500' : 'text-white/20 hover:text-white/50'"
               @click="toggleLock"
             >
               <svg

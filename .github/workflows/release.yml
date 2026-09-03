@@ -1,4 +1,4 @@
-name: Tauri Release
+name: Vue Release
 
 permissions:
   contents: write
@@ -15,16 +15,10 @@ jobs:
 
     steps:
       - name: 📥 Checkout Repo
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
           lfs: true
-
-      - name: 🛠️ Setup Vite-Plus
-        uses: voidzero-dev/setup-vp@v1
-        with:
-          node-version: 'lts'
-          cache: true
 
       - name: 🛠️ Setup Bun
         uses: oven-sh/setup-bun@v2

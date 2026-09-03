@@ -1,23 +1,38 @@
-#[path = "./core/crypto_token.rs"]
 mod crypto_token;
-#[path = "./core/http_bridge.rs"]
 mod http_bridge;
-#[path = "./core/overlay.rs"]
+// mod iroh_core;
 mod overlay;
-#[path = "./core/stream.rs"]
 mod stream;
-#[path = "./core/utils.rs"]
+// mod sync;
 mod utils;
 
 use tauri::Manager;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    tauri::Builder::default()
+    let mut builder = tauri::Builder::default();
+
+    #[cfg(not(any(target_os = "android", target_os = "ios")))]
+    {
+        builder = builder.plugin(tauri_plugin_updater::Builder::new().build());
+    }
+
+    builder
+        .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_shell::init())
+        .setup(|app| {
+            if cfg!(debug_assertions) {
+                app.handle().plugin(
+                    tauri_plugin_log::Builder::default()
+                        .level(log::LevelFilter::Info)
+                        .build(),
+                )?;
+            }
+            Ok(())
+        })
         .setup(|app| {
             app.manage(stream::PreviewState(std::sync::Mutex::new(None)));
 
@@ -25,6 +40,7 @@ pub fn run() {
             tauri::async_runtime::spawn(async move {
                 http_bridge::start_http_server(handle).await;
             });
+
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
@@ -34,7 +50,9 @@ pub fn run() {
             stream::get_devices,
             stream::start_stream,
             stream::stop_preview,
-            utils::list_files,
+            // sync::seed_path,
+            // sync::download_ticket,
+            utils::list_files
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

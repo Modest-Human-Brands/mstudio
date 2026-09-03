@@ -18,15 +18,14 @@ concurrency:
 
 env:
   REPO: ${{ github.repository }}
-  USERNAME: ${{ vars.USERNAME }}
   VERSION: ${{ github.ref_name }}
+  # VITE_APP_BASE_URL: '/vuetemplate'
 
 jobs:
   build-desktop:
     env:
       PLATFORM_ENV: native
       NUXT_PUBLIC_SITE_URL: ${{ vars.SITE_URL }}
-      NUXT_PUBLIC_CDN_URL: ${{ vars.CDN_URL }}
 
     strategy:
       fail-fast: false
@@ -48,7 +47,7 @@ jobs:
 
     steps:
       - name: 📥 Checkout Repo
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
           lfs: true
@@ -63,7 +62,95 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
         with:
           # Those targets are only used on macos runners so it's in an `if` to slightly speed up windows and linux builds.
-          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+          targets: ${{ matrix.platform == 'macos-latest' &&
+            'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+
+      - name: 🛠️ Setup Vite-Plus
+        uses: voidzero-dev/setup-vp@v1
+        with:
+          node-version: 'lts/*'
+          cache: true
+
+      - name: 🛠️ Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: 📦 Install Dependencies
+        run: bun install --frozen-lockfile
+
+      - name: ⚙️ Build and Upload Artifact
+        uses: tauri-apps/tauri-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          args: ${{ matrix.args }}
+          tagName: v__VERSION__
+          releaseName: 'v__VERSION__'
+          releaseDraft: false
+          prerelease: false
+
+  # deploy-desktop:
+  #   needs: build-desktop
+  #   runs-on: ubuntu-latest
+
+  build-mobile:
+    env:
+      ANDROID_HOME:
+      PLATFORM_ENV: native
+      NUXT_PUBLIC_SITE_URL: ${{ vars.SITE_URL }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: 'ubuntu-latest'
+            os: 'android'
+          # - platform: 'ubuntu-latest'
+          #   name: 'ios'
+          #   args: ''
+
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+      - name: 📥 Checkout Repo
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Install OS Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+
+      - name: Setup Java
+        uses: actions/setup-java@v6
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v4
+
+      - name: Setup Android NDK
+        run: |
+          sdkmanager "ndk;29.0.13846066"
+          echo "NDK_HOME=${{ env.ANDROID_HOME }}/ndk/29.0.13846066" >> $GITHUB_ENV
+
+      - name: Setup Android Signing
+        run: |
+          cd src-tauri/gen/android
+          echo "keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}" > keystore.properties
+          echo "password=${{ secrets.ANDROID_KEY_PASSWORD }}" >> keystore.properties
+          base64 -d <<< "${{ secrets.ANDROID_KEY_BASE64 }}" > ./release-keystore.jks
+          echo "storeFile=../release-keystore.jks" >> keystore.properties
+
+      - name: 🛠️ Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
 
       - name: 🛠️ Setup Vite-Plus
         uses: voidzero-dev/setup-vp@v1
@@ -79,103 +166,24 @@ jobs:
       - name: 📦 Install Dependencies
         run: bun install --frozen-lockfile
 
-      - name: ⚙️ Build and Upload Artifact
-        uses: tauri-apps/tauri-action@v0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: ⚙️ Build Artifact
+        run: bun run tauri:build:mobile
+
+      - name: ⚙️ Upload Artifact
+        uses: svenstaro/upload-release-action@v2
         with:
-          args: ${{ matrix.args }}
-          tagName: v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
-          releaseName: 'v__VERSION__'
-          releaseDraft: true
-          prerelease: false
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release.apk
+          asset_name: msync_${{ env.VERSION }}_arm64.apk
+          tag: ${{ env.VERSION }}
 
-  # deploy-desktop:
-  #   needs: build-desktop
-  #   runs-on: ubuntu-latest
-
-  # build-mobile:
-  #   env:
-  #     ANDROID_HOME:
-  #     PLATFORM_ENV: native
-  #     VUE_PUBLIC_SITE_URL: ${{ vars.SITE_URL }}
-  #     VUE_PUBLIC_CDN_URL: ${{ vars.CDN_URL }}
-
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       include:
-  #         - platform: "ubuntu-latest"
-  #           os: "android"
-
-  #         # - platform: 'ubuntu-latest'
-  #         #   name: 'ios'
-  #         #   args: ''
-
-  #   runs-on: ${{ matrix.platform }}
-
-  #   steps:
-  #     - name: 📥 Checkout Repo
-  #       uses: actions/checkout@v6
-  #       with:
-  #         fetch-depth: 0
-
-  #     - name: Install OS Dependencies
-  #       run: |
-  #         sudo apt-get update
-  #         sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
-
-  #     - name: Setup Java
-  #       uses: actions/setup-java@v4
-  #       with:
-  #         distribution: "temurin"
-  #         java-version: "17"
-
-  #     - name: Setup Android SDK
-  #       uses: android-actions/setup-android@v3
-
-  #     - name: Setup Android NDK
-  #       run: |
-  #         sdkmanager "ndk;27.0.11902837"
-  #         echo "NDK_HOME=${{ env.ANDROID_HOME }}/ndk/27.0.11902837" >> $GITHUB_ENV
-
-  #     - name: Setup Android Signing
-  #       run: |
-  #         cd src-tauri/gen/android
-  #         echo "keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}" > keystore.properties
-  #         echo "password=${{ secrets.ANDROID_KEY_PASSWORD }}" >> keystore.properties
-  #         base64 -d <<< "${{ secrets.ANDROID_KEY_BASE64 }}" > ./upload-keystore.jks
-  #         echo "storeFile=../upload-keystore.jks" >> keystore.properties
-
-  #     - name: 🛠️ Setup Rust
-  #       uses: dtolnay/rust-toolchain@stable
-  #       with:
-  #         targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
-
-  #     - name: 🛠️ Setup Vite-Plus
-  #       uses: voidzero-dev/setup-vp@v1
-  #       with:
-  #         node-version: "lts"
-  #         cache: true
-
-  #    - name: 🛠️ Setup Bun
-  #      uses: oven-sh/setup-bun@v2
-  #      with:
-  #        bun-version: latest
-
-  #     - name: 📦 Install Dependencies
-  #       run: bun install --frozen-lockfile
-
-  #     - name: ⚙️ Build Artifact
-  #       run: bun run tauri:build:mobile
-
-  #     - name: ⚙️ Upload Artifact
-  #       uses: svenstaro/upload-release-action@v2
-  #       with:
-  #         repo_token: ${{ secrets.GITHUB_TOKEN }}
-  #         file: src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release.apk
-  #         asset_name: modest-human-brands_${{ env.VERSION }}_arm64.apk
-  #         tag: ${{ env.VERSION }}
+      - name: ⚙️ Upload Artifact
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: src-tauri/gen/android/app/build/outputs/bundle/universalRelease/app-universal-release.aab
+          asset_name: msync_${{ env.VERSION }}_arm64.aab
+          tag: ${{ env.VERSION }}
 
   # deploy-mobile:
   #   needs: build-mobile

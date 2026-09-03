@@ -1,34 +1,34 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue';
-import { useElementSize } from '@vueuse/core';
-import type { MediaItem } from '../types';
+import { ref, onMounted, watch } from 'vue'
+import { useElementSize } from '@vueuse/core'
+import type { MediaItem } from '../types'
 
 const props = defineProps<{
-  mediaItems: MediaItem[];
-  activeMediaSlug: string;
-}>();
+  mediaItems: MediaItem[]
+  activeMediaSlug: string
+}>()
 
-const emit = defineEmits<{ update: [slug: string] }>();
+const emit = defineEmits<{ update: [slug: string] }>()
 
-const containerEl = ref<HTMLElement>();
-const listEl = ref<HTMLUListElement>();
-const x = ref(0);
-const { width: containerW } = useElementSize(containerEl);
+const containerEl = ref<HTMLElement>()
+const listEl = ref<HTMLUListElement>()
+const x = ref(0)
+const { width: containerW } = useElementSize(containerEl)
 
 function scrollToActive(slug: string) {
-  const index = props.mediaItems.findIndex((item) => item.slug === slug);
-  if (index === -1) return;
-  const item = listEl.value?.children[index] as HTMLElement | undefined;
-  if (!item) return;
+  const index = props.mediaItems.findIndex((item) => item.slug === slug)
+  if (index === -1) return
+  const item = listEl.value?.children[index] as HTMLElement | undefined
+  if (!item) return
   x.value =
-    x.value + (containerW.value / 2 - (item.getBoundingClientRect().left + item.offsetWidth / 2));
+    x.value + (containerW.value / 2 - (item.getBoundingClientRect().left + item.offsetWidth / 2))
 }
 
-onMounted(() => scrollToActive(props.activeMediaSlug));
+onMounted(() => scrollToActive(props.activeMediaSlug))
 watch(
   () => props.activeMediaSlug,
   (slug) => scrollToActive(slug),
-);
+)
 </script>
 
 <template>
@@ -49,7 +49,7 @@ watch(
             class="block overflow-hidden rounded transition-all duration-300"
             :class="
               media.slug === activeMediaSlug
-                ? 'ring-1 ring-primary-500 opacity-100'
+                ? 'ring-1 ring-accent-500 opacity-100'
                 : 'opacity-40 hover:opacity-70'
             "
             @click="emit('update', media.slug)"

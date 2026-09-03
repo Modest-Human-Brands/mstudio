@@ -21,15 +21,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 📥 Checkout Repo
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
-
-      - name: 🛠️ Setup Vite-Plus
-        uses: voidzero-dev/setup-vp@v1
-        with:
-          node-version: 'lts'
-          cache: true
+          lfs: true
 
       - name: 🛠️ Setup Bun
         uses: oven-sh/setup-bun@v2

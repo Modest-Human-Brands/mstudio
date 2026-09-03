@@ -1,15 +1,15 @@
 <script setup lang="ts">
 defineProps<{
-  label: string;
-  modelValue: number;
-  unit?: string;
-  min?: number;
-  max?: number;
-  step?: number;
-  readonly?: boolean;
-}>();
+  label: string
+  modelValue: number
+  unit?: string
+  min?: number
+  max?: number
+  step?: number
+  readonly?: boolean
+}>()
 
-defineEmits<{ 'update:modelValue': [number] }>();
+defineEmits<{ 'update:modelValue': [number] }>()
 </script>
 
 <template>
