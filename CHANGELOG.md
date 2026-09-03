@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.4.6
+
+### 💅 Refactors
+
+- Overlay and stream pages for improved readability and consistency ([d79bd3b](https://github.com/Modest-Human-Brands/msync/commit/d79bd3b))
+
+### 🏡 Chore
+
+- Apply code fixes [skip ci] ([dac9408](https://github.com/Modest-Human-Brands/msync/commit/dac9408))
+
+### ❤️ Contributors
+
+- Shba007 ([@shba007](https://github.com/shba007))
+- Shirsendu Bairagi ([@shba007](https://github.com/shba007))
+
 ## v0.4.5
 
 [compare changes](https://github.com/Modest-Human-Brands/msync/compare/v0.4.4...v0.4.5)
