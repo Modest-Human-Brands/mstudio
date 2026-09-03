@@ -14,28 +14,28 @@ name = "app_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
-tauri-build = { version = "2.6", features = [] }
+tauri-build = { version = "2.6.3", features = [] }
 
 [dependencies]
-axum = "0.8"
-hex = "0.4"
-hostname = "0.4"
-serde_json = "1.0"
-serde = { version = "1.0", features = ["derive"] }
-log = "0.4"
-tauri = { version = "2.11", features = ["protocol-asset"] }
-tauri-plugin-log = "2.9"
-tauri-plugin-process = "2.3"
-tauri-plugin-shell = "2.3"
-tokio = { version = "1.53", features = ["full"] }
-tower-http = { version = "0.7", features = ["cors", "fs", "set-header"] }
-tauri-plugin-opener = "2.5"
-tauri-plugin-fs = "2.5"
-tauri-plugin-dialog = "2"
+axum = "0.8.9"
+hex = "0.4.3"
+hostname = "0.4.2"
+serde_json = "1.0.151"
+serde = { version = "1.0.229", features = ["derive"] }
+log = "0.4.34"
+tauri = { version = "2.11.5", features = ["protocol-asset"] }
+tauri-plugin-log = "2.9.1"
+tauri-plugin-process = "2.3.1"
+tauri-plugin-shell = "2.3.6"
+tokio = { version = "1.53.1", features = ["full"] }
+tower-http = { version = "0.7.1", features = ["cors", "fs", "set-header"] }
+tauri-plugin-opener = "2.5.5"
+tauri-plugin-fs = "2.5.2"
+tauri-plugin-dialog = "2.7.3"
 
 
 [target.'cfg(windows)'.dependencies]
-windows = { version = "0.58", features = [
+windows = { version = "0.62.2", features = [
   "Win32_Foundation",
   "Win32_Security_Cryptography",
   "Win32_Security_Cryptography_Certificates",
